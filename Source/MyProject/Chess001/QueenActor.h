@@ -34,6 +34,9 @@ public:
 	//очистка доски
 	void ClearDesc();
 
+	void HorisontFill(iPosition AddPosition);
+	void VerticalFill(iPosition AddPosition);
+	void DioganalFill(iPosition AddPosition);
 
 	//доска
 	int32 iDesc8x8 [MAX_SLOT*MAX_SLOT] = {
