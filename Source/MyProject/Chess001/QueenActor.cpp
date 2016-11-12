@@ -35,9 +35,10 @@ void AQueenActor::SPrintResult()
 	///////////////////
 	iPosition pos;
 	pos.x = 4;
-	pos.y = 8;
+	pos.y = 4;
 	HorisontFill(pos);
 	VerticalFill(pos);
+	DioganalFill(pos);
 	///////////////////
 	
 	for (int32 k = MAX_SLOT*MAX_SLOT-1; k>=0; k=k-8)
@@ -101,6 +102,70 @@ void AQueenActor::VerticalFill(iPosition AddPosition)
 //Заполнение полей по диоганалям
 void AQueenActor::DioganalFill(iPosition AddPosition)
 {
+	int32 IndexSlot = ((AddPosition.x - 1)*MAX_SLOT + (AddPosition.y - 1));
+	
+	while (IndexSlot<MAX_SLOT*MAX_SLOT && IndexSlot>=0)
+	{
+		iDesc8x8[IndexSlot] = 1;
+
+
+		IndexSlot += MAX_SLOT-1;
+		
+		if ((IndexSlot + 1) % MAX_SLOT == 0)
+		{
+			break;
+		}
+		
+
+	}
+
+	IndexSlot = ((AddPosition.x - 1)*MAX_SLOT + (AddPosition.y - 1));
+
+	
+	while (IndexSlot<MAX_SLOT*MAX_SLOT&&IndexSlot>=0 )
+	{
+		iDesc8x8[IndexSlot] = 1;
+
+		if ((IndexSlot + 1) % MAX_SLOT == 0)
+		{
+			break;
+		}
+
+		IndexSlot -= MAX_SLOT - 1;
+		
+	}
+
+	IndexSlot = ((AddPosition.x - 1)*MAX_SLOT + (AddPosition.y - 1));
+
+	while (IndexSlot<MAX_SLOT*MAX_SLOT && IndexSlot >= 0)
+	{
+		iDesc8x8[IndexSlot] = 1;
+
+		if ((IndexSlot >= MAX_SLOT*MAX_SLOT - MAX_SLOT))
+		{
+			break;
+		}
+		
+		IndexSlot += MAX_SLOT +1;
+
+		
+	}
+
+	IndexSlot = ((AddPosition.x - 1)*MAX_SLOT + (AddPosition.y - 1));
+
+
+	while (IndexSlot<MAX_SLOT*MAX_SLOT&&IndexSlot >= 0)
+	{
+		iDesc8x8[IndexSlot] = 1;
+
+		if ((IndexSlot) % MAX_SLOT == 0)
+		{
+			break;
+		}
+
+		IndexSlot -= MAX_SLOT + 1;
+
+	}
 }
 /*
 *0   1  2  3  4  5  6  7
