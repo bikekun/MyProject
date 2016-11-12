@@ -11,8 +11,8 @@ AQueenActor::AQueenActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	StartPosition.x = 0;
-	StartPosition.y = 0;
+	StartPosition.x = 1;
+	StartPosition.y = 8;
 
 }
 
@@ -20,7 +20,11 @@ AQueenActor::AQueenActor()
 void AQueenActor::BeginPlay()
 {
 	Super::BeginPlay();
-	SPrintResult();
+	FullFill(StartPosition);
+	iDescQueen[((StartPosition.x-1)*MAX_SLOT + (StartPosition.y-1))] = QUEEN;
+
+	//SPrintResult();
+
 }
 
 // Called every frame
@@ -28,23 +32,44 @@ void AQueenActor::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	
+
+	if ((!bDescEnd)&& ThisSlot >=0 && ThisSlot<MAX_SLOT*MAX_SLOT)
+	{
+		
+		
+		if (SpawnQueen(ThisSlot)) 
+		{
+			colQueen++;
+		}
+
+		ThisSlot++;
+	}
+
+	SPrintResult();
+	SPrintQueen(colQueen);
+
 }
 //вывод на экран
 void AQueenActor::SPrintResult()
 {
-	///////////////////
-	iPosition pos;
-	pos.x = 4;
-	pos.y = 4;
-	HorisontFill(pos);
-	VerticalFill(pos);
-	DioganalFill(pos);
+	/////////////////////
+	//iPosition pos;
+	//pos.x = 4;
+	//pos.y = 4;
+	//
+	//FullFill(pos);
+
+	//pos.x = 2;
+	//pos.y = 7;
+
+	//FullFill(pos);
 	///////////////////
 	
 	for (int32 k = MAX_SLOT*MAX_SLOT-1; k>=0; k=k-8)
 	{
 		
-			GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Red, FString::Printf(TEXT("%d;%d;%d;%d;%d;%d;%d;%d"), 
+			GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, FString::Printf(TEXT("%d;%d;%d;%d;%d;%d;%d;%d"), 
 				iDesc8x8[k-7],
 				iDesc8x8[k-6], 
 				iDesc8x8[k-5], 
@@ -56,10 +81,31 @@ void AQueenActor::SPrintResult()
 		
 	}
 }
+
+void AQueenActor::SPrintQueen(int32 colQueen)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Black, FString::Printf(TEXT("Количество ферзей: %d"), colQueen));
+
+	for (int32 k = MAX_SLOT*MAX_SLOT - 1; k >= 0; k = k - 8)
+	{
+		
+		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Black, FString::Printf(TEXT("%d;%d;%d;%d;%d;%d;%d;%d"),
+			iDescQueen[k - 7],
+			iDescQueen[k - 6],
+			iDescQueen[k - 5],
+			iDescQueen[k - 4],
+			iDescQueen[k - 3],
+			iDescQueen[k - 2],
+			iDescQueen[k - 1],
+			iDescQueen[k]));
+
+	}
+}
+
 //очистка положения на доске
 void AQueenActor::ClearDesc()
 {
-	for (int i = 0; i< MAX_SLOT*MAX_SLOT; i++)
+	for (int32 i = 0; i< MAX_SLOT*MAX_SLOT; i++)
 	{
 		iDesc8x8[i] = 0;
 	}
@@ -68,15 +114,21 @@ void AQueenActor::ClearDesc()
 
 	if (StartPosition.x>=MAX_SLOT)
 	{
-		StartPosition.x = 0;
+		StartPosition.x = 1;
 		StartPosition.y++;
 	}
 
 	if (StartPosition.y >= MAX_SLOT)
 	{
-		StartPosition.x = 0;
-		StartPosition.y = 0;
+		StartPosition.x = 1;
+		StartPosition.y = 1;
 	}
+
+	for (int32 i = 0; i< MAX_SLOT*MAX_SLOT; i++)
+	{
+		iDescQueen[i] = 0;
+	}
+	colQueen = 0;
 }
 
 //Заполнение полей по горизонтале
@@ -167,6 +219,44 @@ void AQueenActor::DioganalFill(iPosition AddPosition)
 
 	}
 }
+
+void AQueenActor::FullFill(iPosition addPosition)
+{
+	HorisontFill(addPosition);
+	VerticalFill(addPosition);
+	DioganalFill(addPosition);
+}
+
+bool AQueenActor::SpawnQueen(int32 newPosition)
+{
+	/*GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT(" %d"), newPosition));*/
+	/*FullFill(StartPosition);
+	iDescQueen[((StartPosition.x - 1)*MAX_SLOT + (StartPosition.y - 1))] = QUEEN;*/
+
+	if (newPosition>=MAX_SLOT*MAX_SLOT)
+	{
+		bDescEnd = true;
+		return false;
+	}
+	else if (iDesc8x8[newPosition] == 0)
+	{
+		iPosition nPos;
+		nPos.x = (newPosition / MAX_SLOT) + 1;
+		nPos.y = (newPosition - (nPos.x-1)*MAX_SLOT)+1;
+
+		FullFill(nPos);
+		iDescQueen[newPosition] = QUEEN;
+
+		/*GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::White, FString::Printf(TEXT(" %d"), newPosition));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, FString::Printf(TEXT(" %d,%d"), nPos.x, nPos.y));*/
+
+		return true;
+	}
+
+	return false;
+	
+}
+
 /*
 *0   1  2  3  4  5  6  7
 *8   9 10 11 12 13 14 15

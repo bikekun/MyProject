@@ -6,6 +6,7 @@
 #include "QueenActor.generated.h"
 
 #define MAX_SLOT 8
+#define QUEEN 1
 
 
 struct iPosition
@@ -31,14 +32,18 @@ public:
 
 	// Вывод на экран результата
 	void SPrintResult();
+	void SPrintQueen(int32 colQueen);
 	//очистка доски
 	void ClearDesc();
 
 	void HorisontFill(iPosition AddPosition);
 	void VerticalFill(iPosition AddPosition);
 	void DioganalFill(iPosition AddPosition);
+	void FullFill(iPosition addPosition);
 
-	//доска
+	//установка ферзей
+	bool SpawnQueen(int32 newPosition);
+	//доска с битыми полями
 	int32 iDesc8x8 [MAX_SLOT*MAX_SLOT] = {
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
@@ -50,7 +55,21 @@ public:
 		0,0,0,0,0,0,0,0,
 		
 	};
+	//растоновка ферзей
+	int32 iDescQueen [MAX_SLOT*MAX_SLOT] = {
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+
+	};
 
 	iPosition StartPosition;
 	bool bDescEnd = false;
+	int32 colQueen = 0;
+	int32 ThisSlot = 0;
 };
