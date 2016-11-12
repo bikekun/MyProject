@@ -34,12 +34,13 @@ void AQueenActor::SPrintResult()
 {
 	///////////////////
 	iPosition pos;
-	pos.x = 2;
-	pos.y = 3;
+	pos.x = 4;
+	pos.y = 8;
 	HorisontFill(pos);
+	VerticalFill(pos);
 	///////////////////
 	
-	for (int32 k = 64; k<=0; k-=8)
+	for (int32 k = MAX_SLOT*MAX_SLOT-1; k>=0; k=k-8)
 	{
 		
 			GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Red, FString::Printf(TEXT("%d;%d;%d;%d;%d;%d;%d;%d"), 
@@ -80,7 +81,8 @@ void AQueenActor::ClearDesc()
 //Заполнение полей по горизонтале
 void AQueenActor::HorisontFill(iPosition AddPosition)
 {
-	int32 IndexSlot = AddPosition.x*8+AddPosition.y-AddPosition.x-1;
+	//
+	int32 IndexSlot = (AddPosition.x-1)*MAX_SLOT;
 	for (int32 x = 0; x<MAX_SLOT; x++)
 	{
 		iDesc8x8[IndexSlot + x] = 1;
@@ -89,8 +91,9 @@ void AQueenActor::HorisontFill(iPosition AddPosition)
 //Заполнение полей по вертикале
 void AQueenActor::VerticalFill(iPosition AddPosition)
 {
-	int32 IndexSlot = AddPosition.x*8+AddPosition.y - AddPosition.y-1;
-	for (int32 y = 0; y<MAX_SLOT; y+=8)
+	//				
+	int32 IndexSlot = ((AddPosition.x-1)*MAX_SLOT +(AddPosition.y-1))- (AddPosition.x - 1) * MAX_SLOT;
+	for (int32 y = 0; y<MAX_SLOT*MAX_SLOT; y+= MAX_SLOT)
 	{
 		iDesc8x8[IndexSlot + y] = 1;
 	}
@@ -100,7 +103,8 @@ void AQueenActor::DioganalFill(iPosition AddPosition)
 {
 }
 /*
- * 1  2  3  4  5  6  7  8
- * 9 10 11 12 13 14 15 16
- * 17 18 19 
+*0  1  2  3  4  5  6  7
+*8  9 10 11 12 13 14 15
+*1617 18 19 20 21 22 23
+*2425 26 27 28 29 30 31
  */
