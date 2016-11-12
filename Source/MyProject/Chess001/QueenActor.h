@@ -32,7 +32,8 @@ public:
 
 	// Вывод на экран результата
 	void SPrintResult();
-	void SPrintQueen(int32 colQueen);
+	void SPrintQueen(int32 value);
+	void SPrintBest();
 	//очистка доски
 	void ClearDesc();
 
@@ -68,8 +69,21 @@ public:
 
 	};
 
+	int32 iBestDesc [MAX_SLOT*MAX_SLOT] = {
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+
+	};
+
 	iPosition StartPosition;
 	bool bDescEnd = false;
 	int32 colQueen = 0;
 	int32 ThisSlot = 0;
+	int32 bestColQueen = -1; 
 };

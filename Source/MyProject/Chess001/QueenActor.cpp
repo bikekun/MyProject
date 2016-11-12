@@ -12,7 +12,7 @@ AQueenActor::AQueenActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	StartPosition.x = 1;
-	StartPosition.y = 8;
+	StartPosition.y = 1;
 
 }
 
@@ -22,6 +22,7 @@ void AQueenActor::BeginPlay()
 	Super::BeginPlay();
 	FullFill(StartPosition);
 	iDescQueen[((StartPosition.x-1)*MAX_SLOT + (StartPosition.y-1))] = QUEEN;
+	colQueen++;
 
 	//SPrintResult();
 
@@ -34,7 +35,7 @@ void AQueenActor::Tick( float DeltaTime )
 
 	
 
-	if ((!bDescEnd)&& ThisSlot >=0 && ThisSlot<MAX_SLOT*MAX_SLOT)
+	if ((!bDescEnd)/*&& ThisSlot >=0 && ThisSlot<MAX_SLOT*MAX_SLOT*/&&StartPosition.x<=MAX_SLOT&&StartPosition.y<=MAX_SLOT)
 	{
 		
 		
@@ -45,9 +46,18 @@ void AQueenActor::Tick( float DeltaTime )
 
 		ThisSlot++;
 	}
+	else if (StartPosition.x<=MAX_SLOT&&StartPosition.y<=MAX_SLOT)
+	{
+		ClearDesc();
+	}
 
 	SPrintResult();
 	SPrintQueen(colQueen);
+
+	if (bestColQueen>=0)
+	{
+		SPrintBest();
+	}
 
 }
 //вывод на экран
@@ -82,9 +92,9 @@ void AQueenActor::SPrintResult()
 	}
 }
 
-void AQueenActor::SPrintQueen(int32 colQueen)
+void AQueenActor::SPrintQueen(int32 value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Black, FString::Printf(TEXT("Количество ферзей: %d"), colQueen));
+	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Black, FString::Printf(TEXT("Количество ферзей: %d"), value));
 
 	for (int32 k = MAX_SLOT*MAX_SLOT - 1; k >= 0; k = k - 8)
 	{
@@ -102,9 +112,41 @@ void AQueenActor::SPrintQueen(int32 colQueen)
 	}
 }
 
+void AQueenActor::SPrintBest()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Yellow, FString::Printf(TEXT("Количество ферзей: %d"), bestColQueen));
+	for (int32 k = MAX_SLOT*MAX_SLOT - 1; k >= 0; k = k - 8)
+	{
+
+		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Black, FString::Printf(TEXT("%d;%d;%d;%d;%d;%d;%d;%d"),
+			iBestDesc[k - 7],
+			iBestDesc[k - 6],
+			iBestDesc[k - 5],
+			iBestDesc[k - 4],
+			iBestDesc[k - 3],
+			iBestDesc[k - 2],
+			iBestDesc[k - 1],
+			iBestDesc[k]));
+
+	}
+}
+
+
 //очистка положения на доске
 void AQueenActor::ClearDesc()
 {
+	if (colQueen > bestColQueen)
+	{
+		bestColQueen = colQueen;
+		
+		for (int32 i = 0; i < MAX_SLOT*MAX_SLOT; i++)
+		{
+			iBestDesc[i] = iDescQueen[i];
+		}
+		
+	}
+
+
 	for (int32 i = 0; i< MAX_SLOT*MAX_SLOT; i++)
 	{
 		iDesc8x8[i] = 0;
@@ -112,16 +154,16 @@ void AQueenActor::ClearDesc()
 
 	StartPosition.x++;
 
-	if (StartPosition.x>=MAX_SLOT)
+	if (StartPosition.x>MAX_SLOT)
 	{
 		StartPosition.x = 1;
 		StartPosition.y++;
 	}
 
-	if (StartPosition.y >= MAX_SLOT)
+	if (StartPosition.y > MAX_SLOT)
 	{
-		StartPosition.x = 1;
-		StartPosition.y = 1;
+		/*StartPosition.x = 1;
+		StartPosition.y = 1;*/
 	}
 
 	for (int32 i = 0; i< MAX_SLOT*MAX_SLOT; i++)
@@ -129,6 +171,12 @@ void AQueenActor::ClearDesc()
 		iDescQueen[i] = 0;
 	}
 	colQueen = 0;
+	bDescEnd = false;
+	ThisSlot = 0;
+
+	FullFill(StartPosition);
+	iDescQueen[((StartPosition.x - 1)*MAX_SLOT + (StartPosition.y - 1))] = QUEEN;
+	colQueen++;
 }
 
 //Заполнение полей по горизонтале
