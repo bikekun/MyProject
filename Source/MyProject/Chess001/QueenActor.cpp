@@ -5,6 +5,8 @@
 #include "Engine.h"
 
 
+
+
 // Sets default values
 AQueenActor::AQueenActor()
 {
@@ -14,6 +16,24 @@ AQueenActor::AQueenActor()
 	StartPosition.x = 1;
 	StartPosition.y = 1;
 
+	///////////////////////
+	// компоненты
+
+	
+	
+
+	/*m_desc = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMesh_Load(TEXT("StaticMesh'StaticMesh'/Game/Geometry/Meshes/chess/desc.desc''"));
+	m_desc->SetStaticMesh(StaticMesh_Load.Object);*/
+
+	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	RootComponent = BoxComp;
+	BoxComp->SetBoxExtent(FVector(1600.f, 1600.f, 1600.f));
+
+	static ConstructorHelpers::FClassFinder<ADesc>
+		ProjectileBP(TEXT("Class'/Script/MyProject.Desc'"));
+	pDesc = ProjectileBP.Class;
+	
 }
 
 // Called when the game starts or when spawned
@@ -23,9 +43,19 @@ void AQueenActor::BeginPlay()
 	FullFill(StartPosition);
 	iDescQueen[((StartPosition.x-1)*MAX_SLOT + (StartPosition.y-1))] = QUEEN;
 	colQueen++;
+	if (pDesc != NULL)
+	{
+		//SPrintResult();
+		UWorld* const World = GetWorld();
 
-	//SPrintResult();
 
+		const FRotator SpawnRotation = FRotator(0.f, 0.f, 0.f);
+		const FVector SpawnLocation = FVector(0.f, 0.f, 300.f);
+
+
+		World->SpawnActor<ADesc>(pDesc, SpawnLocation, SpawnRotation);
+
+	}
 }
 
 // Called every frame
@@ -49,6 +79,8 @@ void AQueenActor::Tick( float DeltaTime )
 	else if (StartPosition.x<=MAX_SLOT&&StartPosition.y<=MAX_SLOT)
 	{
 		ClearDesc();
+
+		
 	}
 
 	SPrintResult();

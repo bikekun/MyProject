@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "mesh_pp/Desc.h"
 #include "QueenActor.generated.h"
 
 #define MAX_SLOT 8
@@ -19,16 +20,16 @@ UCLASS()
 class MYPROJECT_API AQueenActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AQueenActor();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+
 	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
+	virtual void Tick(float DeltaSeconds) override;
 
 	// Вывод на экран результата
 	void SPrintResult();
@@ -45,7 +46,7 @@ public:
 	//установка ферзей
 	bool SpawnQueen(int32 newPosition);
 	//доска с битыми полями
-	int32 iDesc8x8 [MAX_SLOT*MAX_SLOT] = {
+	int32 iDesc8x8[MAX_SLOT*MAX_SLOT] = {
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
@@ -54,10 +55,10 @@ public:
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
-		
+
 	};
 	//растоновка ферзей
-	int32 iDescQueen [MAX_SLOT*MAX_SLOT] = {
+	int32 iDescQueen[MAX_SLOT*MAX_SLOT] = {
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
@@ -69,7 +70,7 @@ public:
 
 	};
 
-	int32 iBestDesc [MAX_SLOT*MAX_SLOT] = {
+	int32 iBestDesc[MAX_SLOT*MAX_SLOT] = {
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
@@ -85,5 +86,20 @@ public:
 	bool bDescEnd = false;
 	int32 colQueen = 0;
 	int32 ThisSlot = 0;
-	int32 bestColQueen = -1; 
+	int32 bestColQueen = -1;
+
+
+	///////////////////////
+	// компоненты
+
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = StaticMeshAssets)
+		UStaticMeshComponent* m_desc;*/
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Root)
+		UBoxComponent* BoxComp;
+
+	
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class ADesc> pDesc;
+	
 };

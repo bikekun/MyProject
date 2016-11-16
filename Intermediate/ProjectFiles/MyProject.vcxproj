@@ -262,8 +262,10 @@
     <None Include="..\..\Config\DefaultGame.ini" />
     <None Include="..\..\Config\DefaultInput.ini" />
     <None Include="..\..\Source\MyProject\MyProject.Build.cs" />
+    <ClCompile Include="..\..\Source\MyProject\Chess001\mesh_pp\Desc.cpp" />
     <ClCompile Include="..\..\Source\MyProject\Chess001\QueenActor.cpp" />
     <ClCompile Include="..\..\Source\MyProject\MyProject.cpp" />
+    <ClInclude Include="..\..\Source\MyProject\Chess001\mesh_pp\Desc.h" />
     <ClInclude Include="..\..\Source\MyProject\Chess001\QueenActor.h" />
     <ClInclude Include="..\..\Source\MyProject\MyProject.h" />
     <ClCompile Include="..\..\Source\MyProject\MyProjectCharacter.cpp" />

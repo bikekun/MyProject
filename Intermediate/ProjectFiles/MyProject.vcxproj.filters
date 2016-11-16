@@ -58,15 +58,24 @@
     <Filter Include="Source\MyProject\Chess001">
       <UniqueIdentifier>{af8d57ca-5bc9-4ad2-93bf-c29f68aa9149}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\MyProject\Chess001\mesh_pp">
+      <UniqueIdentifier>{ffc8fc16-ef53-4d63-b733-1f5cf3d1cebd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\MyProject\Chess001\QueenActor.h">
       <Filter>Source\MyProject\Chess001</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\MyProject\Chess001\mesh_pp\Desc.h">
+      <Filter>Source\MyProject\Chess001\mesh_pp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\MyProject\Chess001\QueenActor.cpp">
       <Filter>Source\MyProject\Chess001</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MyProject\Chess001\mesh_pp\Desc.cpp">
+      <Filter>Source\MyProject\Chess001\mesh_pp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
