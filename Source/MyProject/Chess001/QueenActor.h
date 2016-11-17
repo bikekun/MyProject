@@ -101,5 +101,10 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class ADesc> pDesc;
+
+	ADesc *dd;
+
+
+	virtual void OnConstruction(const FTransform& transform) override;
 	
 };

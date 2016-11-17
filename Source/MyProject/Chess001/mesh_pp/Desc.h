@@ -22,6 +22,7 @@ public:
 
 	void ResetMaterial(bool BlackMaterial);
 
-	
+	UMaterialInterface *mat_b;
+	UMaterialInterface *mat_w;
 	
 };

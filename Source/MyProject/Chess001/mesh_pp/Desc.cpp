@@ -14,8 +14,13 @@ ADesc::ADesc()
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMesh_Load(TEXT("StaticMesh'/Game/Geometry/Meshes/chess/desc.desc'"));
 	mDescStaticMesh->SetStaticMesh(StaticMesh_Load.Object);
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> BlackMaterial_Load(TEXT("Material'/Game/Geometry/Meshes/chess/b_mat.b_mat'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> WhiteMaterial_Load(TEXT("Material'/Game/Geometry/Meshes/chess/w_mat.w_mat'"));
 
-	ResetMaterial(true);
+	mat_b = BlackMaterial_Load.Object;
+	mat_w = WhiteMaterial_Load.Object;
+
+	ResetMaterial(false);
 
 }
 
@@ -30,13 +35,13 @@ void ADesc::ResetMaterial(bool BlackMaterial)
 {
 	if (BlackMaterial)
 	{
-		static ConstructorHelpers::FObjectFinder<UMaterialInterface> BlackMaterial_Load(TEXT("Material'/Game/Geometry/Meshes/chess/b_mat.b_mat'"));
-		mDescStaticMesh->SetMaterial(0, BlackMaterial_Load.Object);
+		
+		mDescStaticMesh->SetMaterial(0, mat_b);
 	}
 	else
 	{
-		static ConstructorHelpers::FObjectFinder<UMaterialInterface> WhiteMaterial_Load(TEXT("Material'/Game/Geometry/Meshes/chess/w_mat.w_mat'"));
-		mDescStaticMesh->SetMaterial(0, WhiteMaterial_Load.Object);
+		
+		mDescStaticMesh->SetMaterial(0, mat_w);
 	}
 }
 

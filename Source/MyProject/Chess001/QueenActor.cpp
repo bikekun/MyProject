@@ -28,11 +28,15 @@ AQueenActor::AQueenActor()
 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	RootComponent = BoxComp;
-	BoxComp->SetBoxExtent(FVector(1600.f, 1600.f, 1600.f));
+	BoxComp->SetBoxExtent(FVector((800.000000, 800.000000, 100.000000)));
 
 	static ConstructorHelpers::FClassFinder<ADesc>
 		ProjectileBP(TEXT("Class'/Script/MyProject.Desc'"));
 	pDesc = ProjectileBP.Class;
+
+	
+
+	
 	
 }
 
@@ -43,19 +47,55 @@ void AQueenActor::BeginPlay()
 	FullFill(StartPosition);
 	iDescQueen[((StartPosition.x-1)*MAX_SLOT + (StartPosition.y-1))] = QUEEN;
 	colQueen++;
-	if (pDesc != NULL)
-	{
-		//SPrintResult();
-		UWorld* const World = GetWorld();
 
 
-		const FRotator SpawnRotation = FRotator(0.f, 0.f, 0.f);
-		const FVector SpawnLocation = FVector(0.f, 0.f, 300.f);
+	
+
+	
+	
+}
+void AQueenActor::OnConstruction(const FTransform& transform) {
+	Super::OnConstruction(transform);
+
+	int32 index = 0;
 
 
-		World->SpawnActor<ADesc>(pDesc, SpawnLocation, SpawnRotation);
+	//SPrintResult();
+	UWorld* const World = GetWorld();
 
-	}
+	/*FActorSpawnParameters SpawnParams;
+	SpawnParams.Name = "1";
+	SpawnParams.Owner = this;
+	SpawnParams.bNoCollisionFail = true;*/
+	if (World != NULL)
+
+		for (int x = 0; x < MAX_SLOT; x++)
+		{
+			for (int y = 0; y < MAX_SLOT; y++)
+			{
+				const FRotator SpawnRotation = FRotator::ZeroRotator;
+				const FVector SpawnLocation = RootComponent->GetComponentLocation() + FVector((200 * x) - (200 * MAX_SLOT / 2), (200 * y) - (200 * MAX_SLOT / 2), 0.f);
+
+
+
+				ADesc *op = World->SpawnActor<ADesc>(pDesc, SpawnLocation, SpawnRotation);//, SpawnParams);
+
+
+
+
+				if (index % 2 == 0)
+					op->ResetMaterial(false);
+				else
+					op->ResetMaterial(true);
+
+				index++;
+
+
+
+			}
+			index++;
+		}//for
+
 }
 
 // Called every frame
