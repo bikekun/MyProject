@@ -6,7 +6,6 @@
 
 
 
-
 // Sets default values
 AQueenActor::AQueenActor()
 {
@@ -30,14 +29,64 @@ AQueenActor::AQueenActor()
 	RootComponent = BoxComp;
 	BoxComp->SetBoxExtent(FVector((800.000000, 800.000000, 100.000000)));
 
-	static ConstructorHelpers::FClassFinder<ADesc>
-		ProjectileBP(TEXT("Class'/Script/MyProject.Desc'"));
-	pDesc = ProjectileBP.Class;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>
+		ProjectileBP(TEXT("StaticMesh'/Game/Geometry/Meshes/chess/desc.desc'"));
 
-	
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> BlackMaterial_Load(TEXT("Material'/Game/Geometry/Meshes/chess/b_mat.b_mat'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> WhiteMaterial_Load(TEXT("Material'/Game/Geometry/Meshes/chess/w_mat.w_mat'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>
+		ProjectileMesh(TEXT("StaticMesh'/Game/Geometry/Meshes/chess/queen.queen'"));
 
+	mat_b = BlackMaterial_Load.Object;
+	mat_w = WhiteMaterial_Load.Object;
+
+	for (int32 z = 0; z < MAX_SLOT; z++)
+	{
+		for (int32 i = 0; i < MAX_SLOT; i++)
+		{
+
+			pDesc.Add(NULL);
+			FString fs = "desc ";
+			fs.Append(FString::FromInt(i+z*MAX_SLOT));
+			pDesc[pDesc.Num() - 1] = CreateDefaultSubobject<UStaticMeshComponent>(FName(*fs));
+			pDesc[pDesc.Num() - 1]->SetStaticMesh(ProjectileBP.Object);
+			pDesc[pDesc.Num() - 1]->SetMobility(EComponentMobility::Movable);
+			FVector fv = RootComponent->GetComponentLocation() + FVector(200.f*i, 200.f*z, 0.f);
+			pDesc[pDesc.Num() - 1]->SetWorldLocation(fv);
+
+			if ((i+z) % 2 == 0)
+				pDesc[pDesc.Num() - 1]->SetMaterial(0, mat_b);
+			else
+				pDesc[pDesc.Num() - 1]->SetMaterial(0, mat_w);
+
+		}
+
+		pDesc.Add(NULL);
+		FString fs = "desc ";
+		fs.Append(FString::FromInt(MAX_SLOT*MAX_SLOT+z));
+		pDesc[pDesc.Num()-1] = CreateDefaultSubobject<UStaticMeshComponent>(FName(*fs));
+		pDesc[pDesc.Num() - 1]->SetStaticMesh(ProjectileBP.Object);
+		pDesc[pDesc.Num() - 1]->SetMobility(EComponentMobility::Movable);
+		FVector fv = RootComponent->GetComponentLocation() + FVector(200.f*z, -200.f, 0.f);
+		pDesc[pDesc.Num() - 1]->SetWorldLocation(fv);
+
+		ObjectQueen.Add(NULL);
+		FString fs2 = "queen ";
+		fs2.Append(FString::FromInt(ObjectQueen.Num()));
+		ObjectQueen[ObjectQueen.Num() - 1] = CreateDefaultSubobject<UStaticMeshComponent>(FName(*fs2));
+		ObjectQueen[ObjectQueen.Num() - 1]->SetStaticMesh(ProjectileMesh.Object);
+		ObjectQueen[ObjectQueen.Num() - 1]->SetMobility(EComponentMobility::Movable);
+		ObjectQueen[ObjectQueen.Num() - 1]->SetWorldLocation(fv);
+	}
 	
 	
+	
+	
+		
+
+		
+
+		op = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("op"));
 }
 
 // Called when the game starts or when spawned
@@ -54,47 +103,32 @@ void AQueenActor::BeginPlay()
 	
 	
 }
+
+void AQueenActor::MoveQueen()
+{
+	int Index = 0;
+
+	for (int32 i = 0; i < MAX_SLOT; i++)
+
+	{
+		for (int32 j = 0; j < MAX_SLOT; j++)
+		{
+			
+			if (i*MAX_SLOT + j<MAX_SLOT*MAX_SLOT&&iBestDesc[i*MAX_SLOT+j] == 1 && Index < MAX_SLOT)
+			{
+				FVector fv = pDesc[0]->GetComponentLocation() + FVector(200.f*i, 200.f*j, 0);
+				ObjectQueen[Index]->SetWorldLocation(fv);
+				Index++;
+			}
+		}
+	}
+}
+
 void AQueenActor::OnConstruction(const FTransform& transform) {
 	Super::OnConstruction(transform);
 
-	int32 index = 0;
+	
 
-
-	//SPrintResult();
-	UWorld* const World = GetWorld();
-
-	/*FActorSpawnParameters SpawnParams;
-	SpawnParams.Name = "1";
-	SpawnParams.Owner = this;
-	SpawnParams.bNoCollisionFail = true;*/
-	if (World != NULL)
-
-		for (int x = 0; x < MAX_SLOT; x++)
-		{
-			for (int y = 0; y < MAX_SLOT; y++)
-			{
-				const FRotator SpawnRotation = FRotator::ZeroRotator;
-				const FVector SpawnLocation = RootComponent->GetComponentLocation() + FVector((200 * x) - (200 * MAX_SLOT / 2), (200 * y) - (200 * MAX_SLOT / 2), 0.f);
-
-
-
-				ADesc *op = World->SpawnActor<ADesc>(pDesc, SpawnLocation, SpawnRotation);//, SpawnParams);
-
-
-
-
-				if (index % 2 == 0)
-					op->ResetMaterial(false);
-				else
-					op->ResetMaterial(true);
-
-				index++;
-
-
-
-			}
-			index++;
-		}//for
 
 }
 
@@ -119,6 +153,7 @@ void AQueenActor::Tick( float DeltaTime )
 	else if (StartPosition.x<=MAX_SLOT&&StartPosition.y<=MAX_SLOT)
 	{
 		ClearDesc();
+		MoveQueen();
 
 		
 	}

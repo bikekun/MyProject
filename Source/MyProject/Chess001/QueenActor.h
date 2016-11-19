@@ -100,11 +100,20 @@ public:
 
 	
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		TSubclassOf<class ADesc> pDesc;
+	TArray<UStaticMeshComponent*> pDesc;
 
-	ADesc *dd;
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TArray<UStaticMeshComponent*> ObjectQueen;
 
+	TArray<UStaticMeshComponent*> QueenMesh;
 
+	void MoveQueen();
+
+	UMaterialInterface *mat_b;
+	UMaterialInterface *mat_w;
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	UStaticMeshComponent* op;
 	virtual void OnConstruction(const FTransform& transform) override;
 	
 };
